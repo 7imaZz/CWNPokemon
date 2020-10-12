@@ -25,7 +25,7 @@ public class PokemonViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Pokemon>> liveData = new MutableLiveData<>();
 
     @ViewModelInject
-    public PokemonViewModel(Repository repository) {
+    PokemonViewModel(Repository repository) {
         this.repository = repository;
     }
 
@@ -41,7 +41,7 @@ public class PokemonViewModel extends ViewModel {
                     for (Pokemon pokemon: pokes){
                         String url = pokemon.getUrl();
                         String[] pokemonIndex = url.split("/");
-                        pokemon.setUrl("https://pokeres.bastionbot.org/images/pokemon/"+pokemonIndex[pokemonIndex.length-1]+"png");
+                        pokemon.setUrl("https://pokeres.bastionbot.org/images/pokemon/"+pokemonIndex[pokemonIndex.length-1]+".png");
                     }
                     return pokes;
                 })
