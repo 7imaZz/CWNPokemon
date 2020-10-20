@@ -4,19 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.FavoritePokesActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pokemon_rv"
+        android:id="@+id/fav_pokemon_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <Button
-        android:id="@+id/fav_btn"
+        android:id="@+id/main_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/favorite"/>
+        android:text="@string/main_pokes"/>
 
 </RelativeLayout>

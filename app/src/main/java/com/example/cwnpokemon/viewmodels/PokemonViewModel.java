@@ -5,16 +5,14 @@ import android.util.Log;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.room.Ignore;
 
 import com.example.cwnpokemon.pojo.Pokemon;
-import com.example.cwnpokemon.pojo.PokemonResponse;
 import com.example.cwnpokemon.repository.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class PokemonViewModel extends ViewModel {
@@ -22,15 +20,20 @@ public class PokemonViewModel extends ViewModel {
     private static final String TAG = "PokemonViewModel";
 
     private Repository repository;
-    private MutableLiveData<ArrayList<Pokemon>> liveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Pokemon>> pokesLiveData = new MutableLiveData<>();
+    private List<Pokemon> favPokes = null;
 
     @ViewModelInject
     PokemonViewModel(Repository repository) {
         this.repository = repository;
     }
 
-    public MutableLiveData<ArrayList<Pokemon>> getLiveData() {
-        return liveData;
+    public MutableLiveData<ArrayList<Pokemon>> getPokesLiveData() {
+        return pokesLiveData;
+    }
+
+    public List<Pokemon> getFavPokes() {
+        return favPokes;
     }
 
     public void getPokes(){
@@ -46,7 +49,20 @@ public class PokemonViewModel extends ViewModel {
                     return pokes;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result->liveData.setValue(result),
+                .subscribe(result-> pokesLiveData.setValue(result),
                         error-> Log.d(TAG, "getPokes: "+error.getMessage()));
+
+    }
+
+    public void insertPokemon(Pokemon pokemon){
+        repository.insertPokemon(pokemon);
+    }
+
+    public void deletePokemon(String pokemonName){
+        repository.deletePokemon(pokemonName);
+    }
+
+    public void getAllPokes(){
+        favPokes = repository.getAllPokes();
     }
 }

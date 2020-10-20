@@ -39,6 +39,8 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.PokemonV
         this.pokes = pokes;
     }
 
+
+
     @NonNull
     @Override
     public PokemonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,5 +59,8 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.PokemonV
         return pokes.size();
     }
 
+    public Pokemon getPokemonAt(int pos){
+        return pokes.get(pos);
+    }
 
 }

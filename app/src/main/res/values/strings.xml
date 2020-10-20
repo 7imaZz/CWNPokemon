@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CWNPokemon</string>
+    <string name="favorite">Favorite</string>
+    <string name="main_pokes">Main Pokes</string>
 </resources>

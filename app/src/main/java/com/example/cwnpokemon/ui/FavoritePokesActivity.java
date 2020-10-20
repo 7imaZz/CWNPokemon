@@ -17,42 +17,46 @@ import com.example.cwnpokemon.adapters.PokemonAdapter;
 import com.example.cwnpokemon.pojo.Pokemon;
 import com.example.cwnpokemon.viewmodels.PokemonViewModel;
 
+import java.util.ArrayList;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity{
+public class FavoritePokesActivity extends AppCompatActivity {
 
-    PokemonViewModel viewModel;
-    RecyclerView pokesRecyclerView;
+    RecyclerView recyclerView;
+    Button mainButton;
+
     PokemonAdapter adapter;
-    Button favButton;
+    PokemonViewModel pokemonViewModel;
+    ArrayList<Pokemon> pokes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_favorite_pokes);
 
-        pokesRecyclerView = findViewById(R.id.pokemon_rv);
-        favButton = findViewById(R.id.fav_btn);
-        pokesRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView = findViewById(R.id.fav_pokemon_rv);
+        mainButton = findViewById(R.id.main_btn);
+
+        pokes = new ArrayList<>();
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new PokemonAdapter(this);
-        pokesRecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
         setupOnSwipe();
 
+        pokemonViewModel = new ViewModelProvider(this).get(PokemonViewModel.class);
+        pokemonViewModel.getAllPokes();
+        pokes = (ArrayList<Pokemon>) pokemonViewModel.getFavPokes();
 
-        viewModel = new ViewModelProvider(this).get(PokemonViewModel.class);
+        adapter.setPokes(pokes);
 
-        viewModel.getPokes();
-
-        viewModel.getPokesLiveData().observe(this, pokes -> {
-            adapter.setPokes(pokes);
-            adapter.notifyDataSetChanged();
-        });
-
-        favButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, FavoritePokesActivity.class);
+        mainButton.setOnClickListener(v -> {
+            Intent intent = new Intent(FavoritePokesActivity.this, MainActivity.class);
             startActivity(intent);
         });
     }
@@ -70,14 +74,14 @@ public class MainActivity extends AppCompatActivity{
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Pokemon pokemon = adapter.getPokemonAt(position);
-                viewModel.insertPokemon(pokemon);
+                pokes.remove(viewHolder.getAdapterPosition());
+                pokemonViewModel.deletePokemon(pokemon.getName());
                 adapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this, "Inserted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoritePokesActivity.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(pokesRecyclerView);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-
 }
